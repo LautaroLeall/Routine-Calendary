@@ -1,10 +1,11 @@
 // src/context/AuthContext.jsx
-import { createContext, useContext, useEffect, useState } from "react";
+// - Provee un contexto de autenticación para la app (registro, login, logout).
+// - Guarda usuarios y la sesión en localStorage (solo para prototipo).
+// - Expone funciones: register, login, logout, updateUser, getCurrentUser.
+// - Esta implementación **NO** es segura para producción (contraseñas en texto plano).
+// - Ideal para prototipado local; más adelante migrarás a Firebase/Supabase.
 
-// AuthContext
-// - Guarda usuarios y sesión en localStorage (solo para prototipo).
-// - API: register, login, logout, updateUser, getCurrentUser
-// Nota de seguridad: en producción NUNCA guardar contraseñas en texto plano.
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
@@ -12,7 +13,7 @@ const STORAGE_KEY = "routine_calendary_users";
 const SESSION_KEY = "routine_calendary_current_user_id";
 
 export function AuthProvider({ children }) {
-    // users: array de objetos { id, email, password, tipoCalendario, rutinas: [] }
+    // Estado: lista de usuarios (leída desde localStorage al iniciar)
     const [users, setUsers] = useState(() => {
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
@@ -23,7 +24,7 @@ export function AuthProvider({ children }) {
         }
     });
 
-    // currentUserId: id del usuario logueado o null
+    // Estado: id del usuario actualmente logueado (o null)
     const [currentUserId, setCurrentUserId] = useState(() => {
         try {
             return localStorage.getItem(SESSION_KEY) || null;
@@ -32,7 +33,7 @@ export function AuthProvider({ children }) {
         }
     });
 
-    // sincronizar users con localStorage
+    // Sincroniza 'users' en localStorage cada vez que cambia
     useEffect(() => {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
@@ -41,7 +42,7 @@ export function AuthProvider({ children }) {
         }
     }, [users]);
 
-    // sincronizar sesión
+    // Sincroniza la sesión actual en localStorage
     useEffect(() => {
         try {
             if (currentUserId) localStorage.setItem(SESSION_KEY, currentUserId);
@@ -51,20 +52,27 @@ export function AuthProvider({ children }) {
         }
     }, [currentUserId]);
 
-    // Helper: buscar usuario por email
+    // ---------- Helpers ----------
     const findUserByEmail = (email) => users.find(u => u.email === email);
+    const findUserByUsername = (username) => users.find(u => u.username === username);
 
-    // Registrar nuevo usuario (simple)
-    const register = ({ email, password, tipoCalendario = "semanal" }) => {
-        if (!email || !password) throw new Error("Email y contraseña son requeridos.");
+    // ---------- API pública ----------
+// register({ email, username, password, purpose })
+// - Crea un usuario nuevo y lo loguea.
+// - Lanza un Error si faltan campos o email/username ya existen.
+    const register = ({ email, username, password, purpose = "general" }) => {
+        if (!email || !username || !password) throw new Error("Email, usuario y contraseña son requeridos.");
         if (findUserByEmail(email)) throw new Error("El email ya está registrado.");
+        if (findUserByUsername(username)) throw new Error("El nombre de usuario ya está en uso.");
 
         const id = Date.now().toString();
         const nuevo = {
             id,
             email,
-            password, // << SOLO PARA PROTOTIPO: NO guardar en texto plano en prod
-            tipoCalendario,
+            username,
+            password, // << SOLO PARA PROTOTIPO: en prod usar hashing
+            purpose,
+            tipoCalendario: null, // se definirá cuando el usuario cree su primera rutina
             rutinas: []
         };
         setUsers(prev => [...prev, nuevo]);
@@ -72,24 +80,30 @@ export function AuthProvider({ children }) {
         return id;
     };
 
-    // Login (simple comparación de texto)
-    const login = ({ email, password }) => {
-        if (!email || !password) throw new Error("Email y contraseña son requeridos.");
-        const user = users.find(u => u.email === email && u.password === password);
+// login({ identifier, password })
+// - identifier puede ser email o username.
+// - Lanza Error si credenciales inválidas.
+    const login = ({ identifier, password }) => {
+        if (!identifier || !password) throw new Error("Usuario (email o username) y contraseña son requeridos.");
+
+        const user = users.find(u =>
+            (u.email === identifier || u.username === identifier) && u.password === password
+        );
+
         if (!user) throw new Error("Credenciales inválidas.");
         setCurrentUserId(user.id);
         return user.id;
     };
 
-    const logout = () => {
-        setCurrentUserId(null);
-    };
+    const logout = () => setCurrentUserId(null);
 
-    // Actualizar usuario parcialmente: patch = { key: value }
+    // updateUser(id, patch)
+    // - Actualiza parcialmente un usuario (por ejemplo: tipoCalendario, purpose, rutinas).
     const updateUser = (id, patch) => {
         setUsers(prev => prev.map(u => (u.id === id ? { ...u, ...patch } : u)));
     };
 
+    // Devuelve el usuario actualmente logueado (objeto) o null
     const getCurrentUser = () => users.find(u => u.id === currentUserId) || null;
 
     return (
@@ -107,7 +121,7 @@ export function AuthProvider({ children }) {
     );
 }
 
-// Hook de consumo
+// Hook de conveniencia para usar el contexto
 export function useAuth() {
     const ctx = useContext(AuthContext);
     if (!ctx) throw new Error("useAuth debe usarse dentro de AuthProvider");
