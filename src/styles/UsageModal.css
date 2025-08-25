@@ -1,7 +1,7 @@
 /* src/styles/UsageModal.css */
-/* - Estilos modernos para el modal y las cards de selección */
-/* - Animaciones de hover y selección */
-/* - Fondo semi-transparente y centrado elegante */
+/* - Estilos modernos para el modal */
+/* - Cards con 2 estados: preview centrada y contenido expandido */
+/* - Animaciones de hover + selección */
 
 .modal-overlay {
     position: fixed;
@@ -16,7 +16,7 @@
 
 .modal-content {
     padding: 2rem;
-    max-width: 700px;
+    max-width: 650px;
     width: 100%;
     text-align: center;
     animation: slideUp 0.4s ease;
@@ -40,57 +40,75 @@
     gap: 1rem;
 }
 
+/* Estado base de las cards */
 .option-card {
-    border: 3px solid #abaaaa;
+    border: 3px solid #838383;
     border-radius: 16px;
     padding: 1rem;
     background: #fafafa;
     cursor: pointer;
     transition: all 0.3s ease;
-    min-height: 100px;
+    min-height: 135px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* Preview cuando NO está seleccionada */
+.option-card .card-preview {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.option-card .card-preview h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.option-card .card-preview:hover h3 {
+    display: none;
+}
+
+.option-card .card-preview p {
+    display: none;
+    transition: all 0.3s ease;
+}
+
+.option-card .card-preview:hover p {
+    display: block;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Hover */
 .option-card:hover {
     border: 3px solid #025d84;
     transform: translateY(-4px);
     box-shadow: 0 6px 10px rgba(255, 255, 255, 0.5);
 }
 
+/* Seleccionada */
 .option-card.selected {
     border-color: #007bff;
     background: #e9f3ff;
+    flex-direction: column;
+    padding: 1.2rem;
 }
 
-.option-card h3 {
+.option-card.selected h3 {
     font-size: 1.1rem;
     color: #333;
-    transition: opacity 0.5s ease;
 }
 
-.option-card p {
+.option-card.selected p {
     font-size: 0.9rem;
     color: #555;
-    transition: opacity 0.5s ease;
-}
-
-/* Ocultar titulo cuando no está seleccionado */
-.option-card:hover .hover-label {
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-}
-
-/* Ocultar descripción cuando no está seleccionado */
-.option-card .hover-desc {
-    opacity: 0;
-    height: 0;
-    overflow: hidden;
-}
-
-/* Mostrar descripción al hacer hover */
-.option-card:hover .hover-desc {
-    opacity: 1;
-    height: auto;
 }
 
 .modal-actions {

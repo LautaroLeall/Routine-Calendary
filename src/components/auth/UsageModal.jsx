@@ -1,11 +1,11 @@
 // src/components/UsageModal.jsx
 // - Modal interactivo para que el usuario seleccione el propósito de uso.
-// - Las opciones se muestran como cards con hover y estados seleccionados.
-// - Debe elegirse al menos una opción antes de confirmar.
-// - Envía la selección al componente padre (ej. Register).
-// - Usa props: isOpen, onClose, onConfirm (para manejar apertura, cierre y envío).
+// - Usa "cards" con hover y estados seleccionados.
+// - Si no selecciona nada, lanza un SweetAlert2 en vez de un alert feo.
+// - Props: isOpen, onClose, onConfirm.
 
 import { useState } from "react";
+import Swal from "sweetalert2";
 import "../../styles/UsageModal.css";
 
 export default function UsageModal({ isOpen, onClose, onConfirm }) {
@@ -33,7 +33,15 @@ export default function UsageModal({ isOpen, onClose, onConfirm }) {
     // Confirmar selección
     const handleConfirm = () => {
         if (selected.length === 0) {
-            alert("Debes elegir al menos una opción.");
+            Swal.fire({
+                icon: "warning",
+                title: "Selecciona al menos una opción",
+                text: "No puedes continuar sin elegir cómo usarás Routine Calendary.",
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#007bff",
+                background: "#1e1e1e",
+                color: "#fff",
+            });
             return;
         }
         onConfirm(selected); // pasamos selección al padre
@@ -57,18 +65,18 @@ export default function UsageModal({ isOpen, onClose, onConfirm }) {
                                 className={`option-card ${isSelected ? "selected" : ""}`}
                                 onClick={() => toggleOption(opt.id)}
                             >
-                                {/* Si está seleccionado => mostrar ambos */}
+                                {/* Si está seleccionada: mostrar todo */}
                                 {isSelected ? (
                                     <>
                                         <h3>{opt.label}</h3>
                                         <p>{opt.description}</p>
                                     </>
                                 ) : (
-                                    <>
-                                        <h3 className="hover-label">{opt.label}</h3>
-                                        {/* La descripción solo aparece en hover, controlada por CSS */}
-                                        <p className="hover-desc">{opt.description}</p>
-                                    </>
+                                    // Si NO está seleccionada: título + descripción centrados
+                                    <div className="card-preview">
+                                        <h3>{opt.label}</h3>
+                                        <p>{opt.description}</p>
+                                    </div>
                                 )}
                             </div>
                         );
