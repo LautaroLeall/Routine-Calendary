@@ -6,7 +6,7 @@
 // - Consume login() desde AuthContext.
 
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { IoEyeSharp } from "react-icons/io5";  // Icono ver contraseña
 import { FaEyeSlash } from "react-icons/fa";   // Icono ocultar contraseña

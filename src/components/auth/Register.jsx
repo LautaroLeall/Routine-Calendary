@@ -5,7 +5,7 @@
 // - Llama a register() del AuthContext y redirige al dashboard.
 
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { IoEyeSharp } from "react-icons/io5";  // Icono mostrar contraseña
 import { FaEyeSlash } from "react-icons/fa";   // Icono ocultar contraseña
