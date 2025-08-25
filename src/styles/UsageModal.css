@@ -1,0 +1,116 @@
+/* src/styles/UsageModal.css */
+/* - Estilos modernos para el modal y las cards de selección */
+/* - Animaciones de hover y selección */
+/* - Fondo semi-transparente y centrado elegante */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.90);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    padding: 2rem;
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    animation: slideUp 0.4s ease;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #b1b1b1;
+}
+
+.modal-subtitle {
+    margin-bottom: 20px;
+    color: #8f8f8f;
+    font-size: 0.95rem;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.option-card {
+    border: 3px solid #abaaaa;
+    border-radius: 16px;
+    padding: 1rem;
+    background: #fafafa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 100px;
+}
+
+.option-card:hover {
+    border: 3px solid #025d84;
+    transform: translateY(-4px);
+    box-shadow: 0 6px 10px rgba(255, 255, 255, 0.5);
+}
+
+.option-card.selected {
+    border-color: #007bff;
+    background: #e9f3ff;
+}
+
+.option-card h3 {
+    font-size: 1.1rem;
+    color: #333;
+    transition: opacity 0.5s ease;
+}
+
+.option-card p {
+    font-size: 0.9rem;
+    color: #555;
+    transition: opacity 0.5s ease;
+}
+
+/* Ocultar titulo cuando no está seleccionado */
+.option-card:hover .hover-label {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+/* Ocultar descripción cuando no está seleccionado */
+.option-card .hover-desc {
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+/* Mostrar descripción al hacer hover */
+.option-card:hover .hover-desc {
+    opacity: 1;
+    height: auto;
+}
+
+.modal-actions {
+    margin-top: 2rem;
+}
+
+.btn-confirm {
+    width: 75%;
+    background: linear-gradient(90deg, #007bff, #00eaff);
+    border: none;
+    color: white;
+    padding: 0.7rem;
+    font-size: 1.1rem;
+    border-radius: 0.6rem;
+    transition: all 0.5s ease;
+    cursor: pointer;
+}
+
+.btn-confirm:hover {
+    transition: all 0.5s ease;
+    background: linear-gradient(90deg, #00eaff, #007bff);
+    box-shadow: 1px 5px 15px hsl(200, 100%, 25%);
+}

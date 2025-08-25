@@ -1,0 +1,86 @@
+/* src/styles/Register.css */
+/* Estilos principales del formulario de registro */
+
+.register-container {
+    max-width: 640px;
+    margin: 5rem auto;
+    padding: 2rem;
+    background: #63636347;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
+}
+
+.register-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.register-subtitle {
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+}
+
+.register-form {
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    color: #34495e;
+}
+
+.register-form input {
+    border-radius: 0.6rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid #34495e70;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.register-form input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.password-toggle {
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #6c757d;
+    transition: all 0.3s ease;
+}
+
+.password-toggle:hover {
+    color: #007bff;
+}
+
+.btn-modal{
+    background: linear-gradient(90deg, #006b81, #004256);
+    border: none;
+    color: white;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    border-radius: 0.6rem;
+    transition: all 0.5s ease;
+}
+
+.btn-modal:hover {
+    transition: all 0.5s ease;
+    background: linear-gradient(90deg, #004256, #006b81);
+    box-shadow: 1px 5px 15px hsl(200, 100%, 25%);   
+}
+
+.btn-register {
+    width: 80%;
+    background: linear-gradient(90deg, #007bff, #00eaff);
+    border: none;
+    color: white;
+    padding: 0.7rem;
+    font-size: 1.1rem;
+    border-radius: 0.6rem;
+    transition: all 0.5s ease;
+}
+
+.btn-register:hover {
+    transition: all 0.5s ease;
+    background: linear-gradient(90deg, #00eaff, #007bff);
+    box-shadow: 1px 5px 15px hsl(200, 100%, 25%);
+}
