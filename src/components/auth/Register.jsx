@@ -1,69 +1,83 @@
 // src/components/auth/Register.jsx
-// - Formulario de registro con campos: email, username, password, confirmPassword.
-// - Permite alternar la visibilidad de las contraseñas con íconos de react-icons.
-// - Incluye botón que abre un modal (UsageModal) para elegir propósito del calendario.
-// - Llama a register() del AuthContext y redirige al Dashboard.
-// - Importar y añadir ruta /register.
-// - Reemplaza el componente previo si existe.
+// - Captura email, username, password y confirmPassword.
+// - Permite mostrar/ocultar contraseñas con íconos.
+// - Incluye modal (UsageModal) para elegir propósito(s) del calendario.
+// - Llama a register() del AuthContext y redirige al dashboard.
 
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { IoEyeSharp } from "react-icons/io5";  // Icono ver contraseña
+import { IoEyeSharp } from "react-icons/io5";  // Icono mostrar contraseña
 import { FaEyeSlash } from "react-icons/fa";   // Icono ocultar contraseña
-import UsageModal from "./UsageModal";         // Modal para elegir propósito
-import "../../styles/Register.css";            // Estilos del register
+import UsageModal from "./UsageModal";         // Modal interactivo
+import "../../styles/Register.css";            // Estilos específicos
 
 export default function Register() {
-    // useAuth nos da la función register que persiste al usuario en localStorage
-    const { register } = useAuth();
+    const { register } = useAuth();       // función para registrar usuario
     const navigate = useNavigate();
 
-    // estado del formulario
+    // Estado del formulario
     const [form, setForm] = useState({
         email: "",
         username: "",
         password: "",
         confirmPassword: "",
-        purpose: [] // el usuario puede elegir varias opciones desde el modal
+        purpose: [] // el usuario puede elegir uno o varios propósitos desde el modal
     });
 
-    // estado para mostrar/ocultar contraseñas
-    const [showPasswords, setShowPasswords] = useState(false);
+    // Estados independientes para mostrar/ocultar contraseñas
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    // estado de error en validación
+    // Estado de errores de validación
     const [error, setError] = useState("");
 
-    // estado para controlar si se abre el modal
+    // Estado del modal
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Maneja cambios en inputs (reutilizable)
-    const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    // Maneja cambios en inputs de texto
+    const handleChange = (e) => 
+        setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-    // Maneja selección de propósito (desde el modal)
+    // Maneja selección de propósito desde el modal
     const handlePurposeSelect = (selected) => {
-        setForm(prev => ({ ...prev, purpose: selected }));
+        setForm((prev) => ({ ...prev, purpose: selected }));
     };
 
-    // Submit del formulario
+    // Validaciones personalizadas del formulario
+    const validateForm = () => {
+        if (!form.email.includes("@")) {
+            throw new Error("Debes ingresar un email válido.");
+        }
+        if (form.password.length < 6) {
+            throw new Error("La contraseña debe tener al menos 6 caracteres.");
+        }
+        if (form.password !== form.confirmPassword) {
+            throw new Error("Las contraseñas no coinciden.");
+        }
+        if (form.purpose.length === 0) {
+            throw new Error("Debes elegir al menos un propósito.");
+        }
+    };
+
+    // Maneja envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+
         try {
-            if (form.password !== form.confirmPassword) {
-                throw new Error("Las contraseñas no coinciden.");
-            }
-            if (form.purpose.length === 0) {
-                throw new Error("Debes elegir al menos un propósito.");
-            }
-            // Llamamos al contexto para crear usuario
+            // Validamos antes de enviar
+            validateForm();
+
+            // Creamos el usuario con AuthContext
             await register({
                 email: form.email.trim(),
                 username: form.username.trim(),
                 password: form.password,
-                purpose: form.purpose
+                purpose: form.purpose,
             });
-            // Redirigir al dashboard
+
+            // Redirigimos al dashboard
             navigate("/dashboard");
         } catch (err) {
             setError(err.message || "Error en el registro");
@@ -73,9 +87,12 @@ export default function Register() {
     return (
         <div className="register-container">
             <h2 className="register-title">Registro</h2>
-            <p className="register-subtitle">Crea tu cuenta para empezar a organizar tus rutinas.</p>
+            <p className="register-subtitle">
+                Crea tu cuenta para empezar a organizar tus rutinas.
+            </p>
 
             <form onSubmit={handleSubmit} className="register-form">
+                {/* Mensaje de error en validaciones */}
                 {error && <div className="alert alert-danger">{error}</div>}
 
                 {/* Campo Email */}
@@ -101,70 +118,71 @@ export default function Register() {
                         placeholder="tu_usuario"
                         required
                     />
-                    <small className="text-muted">Lo usarás también para iniciar sesión.</small>
+                    <small className="text-muted">
+                        Lo usarás también para iniciar sesión.
+                    </small>
                 </div>
 
-                {/* Contraseña y Confirmar contraseña */}
-                <div className="form-row mb-3">
-                    <div className="form-group password-group mb-3">
-                        <div className="password-input d-flex align-items-center">
-                            <input
-                                name="password"
-                                value={form.password}
-                                onChange={handleChange}
-                                type={showPasswords ? "text" : "password"}
-                                className="form-control"
-                                placeholder="contraseña"
-                                required
-                            />
-                            <span
-                                className="password-toggle ms-2"
-                                onClick={() => setShowPasswords(s => !s)}
-                            >
-                                {showPasswords ? <FaEyeSlash /> : <IoEyeSharp />}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="form-group password-group">
-                        <div className="password-input d-flex align-items-center">
-                            <input
-                                name="confirmPassword"
-                                value={form.confirmPassword}
-                                onChange={handleChange}
-                                type={showPasswords ? "text" : "password"}
-                                className="form-control"
-                                placeholder="confirmar contraseña"
-                                required
-                            />
-                            <span
-                                className="password-toggle ms-2"
-                                onClick={() => setShowPasswords(s => !s)}
-                            >
-                                {showPasswords ? <FaEyeSlash /> : <IoEyeSharp />}
-                            </span>
-                        </div>
+                {/* Campo Contraseña */}
+                <div className="form-group password-group mb-3">
+                    <div className="password-input d-flex align-items-center">
+                        <input
+                            name="password"
+                            value={form.password}
+                            onChange={handleChange}
+                            type={showPassword ? "text" : "password"}
+                            className="form-control"
+                            placeholder="contraseña"
+                            required
+                        />
+                        <span
+                            className="password-toggle ms-2"
+                            onClick={() => setShowPassword((s) => !s)}
+                        >
+                            {showPassword ? <FaEyeSlash /> : <IoEyeSharp />}
+                        </span>
                     </div>
                 </div>
 
-                {/* Botón que abre el modal */}
+                {/* Confirmar contraseña */}
+                <div className="form-group password-group mb-3">
+                    <div className="password-input d-flex align-items-center">
+                        <input
+                            name="confirmPassword"
+                            value={form.confirmPassword}
+                            onChange={handleChange}
+                            type={showConfirmPassword ? "text" : "password"}
+                            className="form-control"
+                            placeholder="confirmar contraseña"
+                            required
+                        />
+                        <span
+                            className="password-toggle ms-2"
+                            onClick={() => setShowConfirmPassword((s) => !s)}
+                        >
+                            {showConfirmPassword ? <FaEyeSlash /> : <IoEyeSharp />}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Botón para abrir modal de propósito */}
                 <div className="form-group mb-4">
                     <button
                         type="button"
-                        className="btn-modal"
+                        className="btn-modal mb-1"
                         onClick={() => setIsModalOpen(true)}
                     >
                         Seleccionar propósito
                     </button>
                     {form.purpose.length > 0 && (
-                        <p className="selected-purpose">
+                        <p className="selected-purpose ms-1" style={{ fontSize: "0.8em" }}>
                             Seleccionado: {form.purpose.join(", ")}
                         </p>
                     )}
                 </div>
 
+                {/* Botón de registro */}
                 <div className="d-flex justify-content-center">
-                    {/* Botón de registro */}
                     <button className="btn-register">Registrarme</button>
                 </div>
             </form>
