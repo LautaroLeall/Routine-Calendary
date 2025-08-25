@@ -8,6 +8,9 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { IoEyeSharp } from "react-icons/io5";  // Icono ver contraseña
+import { FaEyeSlash } from "react-icons/fa";   // Icono ocultar contraseña
+import "../../styles/Login.css";
 
 export default function Login() {
     // login desde el contexto (compara identifier + password con localStorage)
@@ -17,7 +20,9 @@ export default function Login() {
     // estado del formulario
     const [form, setForm] = useState({ identifier: "", password: "" });
     const [error, setError] = useState("");
-    const [showPassword, setShowPassword] = useState(false); // toggle mostrar contraseña
+
+    // estado para mostrar/ocultar contraseñas
+    const [showPasswords, setShowPasswords] = useState(false);
 
     const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
@@ -33,47 +38,47 @@ export default function Login() {
     };
 
     return (
-        <div className="container mt-5" style={{ maxWidth: 640 }}>
-            <h2>Iniciar sesión</h2>
-            <p className="text-muted">Usa tu email o tu nombre de usuario.</p>
+        <div className="login-container">
+            <h2 className="login-title">Iniciar sesión</h2>
+            <p className="login-subtitle">Usa tu email o tu nombre de usuario.</p>
 
-            <form onSubmit={handleSubmit}>
+            <form className="login-form" onSubmit={handleSubmit}>
                 {error && <div className="alert alert-danger">{error}</div>}
 
-                <div className="mb-3">
-                    <label className="form-label">Email o usuario</label>
+                <div className="form-group mb-3">
                     <input
                         name="identifier"
                         value={form.identifier}
                         onChange={handleChange}
                         className="form-control"
-                        placeholder="email@o_usuario"
+                        placeholder="tu@correo.com o tu_usuario"
                         required
                     />
                 </div>
 
-                <div className="mb-3">
-                    <label className="form-label">Contraseña</label>
-                    <div className="input-group">
+                <div className="form-group mb-3">
+                    <div className="input-group d-flex align-items-center">
                         <input
                             name="password"
                             value={form.password}
                             onChange={handleChange}
-                            type={showPassword ? "text" : "password"}
+                            type={showPasswords ? "text" : "password"}
+                            placeholder="contraseña"
                             className="form-control"
                             required
                         />
-                        <button
-                            type="button"
-                            className="btn btn-outline-secondary"
-                            onClick={() => setShowPassword(s => !s)}
+                        <span
+                            className="password-toggle ms-2"
+                            onClick={() => setShowPasswords(s => !s)}
                         >
-                            {showPassword ? "Ocultar" : "Ver"}
-                        </button>
+                            {showPasswords ? <FaEyeSlash /> : <IoEyeSharp />}
+                        </span>
                     </div>
                 </div>
 
-                <button className="btn btn-primary">Entrar</button>
+                <div className="d-flex justify-content-center">
+                    <button className="btn-login">Entrar</button>
+                </div>
             </form>
         </div>
     );
