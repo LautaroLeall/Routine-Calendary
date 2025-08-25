@@ -57,9 +57,9 @@ export function AuthProvider({ children }) {
     const findUserByUsername = (username) => users.find(u => u.username === username);
 
     // ---------- API pública ----------
-// register({ email, username, password, purpose })
-// - Crea un usuario nuevo y lo loguea.
-// - Lanza un Error si faltan campos o email/username ya existen.
+    // register({ email, username, password, purpose })
+    // - Crea un usuario nuevo y lo loguea.
+    // - Lanza un Error si faltan campos o email/username ya existen.
     const register = ({ email, username, password, purpose = "general" }) => {
         if (!email || !username || !password) throw new Error("Email, usuario y contraseña son requeridos.");
         if (findUserByEmail(email)) throw new Error("El email ya está registrado.");
@@ -80,9 +80,9 @@ export function AuthProvider({ children }) {
         return id;
     };
 
-// login({ identifier, password })
-// - identifier puede ser email o username.
-// - Lanza Error si credenciales inválidas.
+    // login({ identifier, password })
+    // - identifier puede ser email o username.
+    // - Lanza Error si credenciales inválidas.
     const login = ({ identifier, password }) => {
         if (!identifier || !password) throw new Error("Usuario (email o username) y contraseña son requeridos.");
 
