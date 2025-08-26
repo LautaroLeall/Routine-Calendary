@@ -1,15 +1,4 @@
 /* src/styles/Navbar.css */
-
-:root {
-    --bg: #0b1016;
-    --panel: rgba(255, 255, 255, 0.03);
-    --muted: #9aa4b2;
-    --accent1: #7c5cff;
-    --accent2: #5de6c7;
-    --accent3: #ff6b6b;
-    --glass: rgba(255, 255, 255, 0.04);
-}
-
 /* contenedor principal */
 .app-nav {
     display: flex;
@@ -96,6 +85,22 @@
     transform: translateY(-2px);
     background: linear-gradient(90deg, #005d8b, #5394ae);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+}
+
+/* active link */
+.nav-menu .nav-link.active {
+    color: white;
+    background: linear-gradient(90deg, #005d8b, #5394ae);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
+}
+
+/* focus visible para accesibilidad */
+.nav-menu .nav-link:focus-visible,
+.btn-login:focus-visible,
+.btn-logout:focus-visible,
+.nav-hamburger:focus-visible {
+    outline: 3px solid rgba(13, 110, 253, 0.24);
+    outline-offset: 3px;
 }
 
 /* user panel */
