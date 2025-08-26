@@ -5,9 +5,18 @@
     max-width: 640px;
     margin: 5rem auto;
     padding: 2rem;
-    background: #63636347;
+    background: #4d6c8b50;
     border-radius: 1rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
+}
+
+.back-link-register {
+    position: absolute;
+    top: 3%;
+    left: 30%;
+    color: #005d8b;
+    font-size: 2rem;
+    text-decoration: none;
 }
 
 .register-title {
