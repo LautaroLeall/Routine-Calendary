@@ -1,4 +1,5 @@
-import React from "react";
+// src/pages/Dashboard.jsx
+import React from 'react'
 import { useAuth } from "../hooks/useAuth";
 
 export default function Dashboard() {
