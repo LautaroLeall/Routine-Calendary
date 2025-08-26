@@ -1,0 +1,83 @@
+/* Contenedor principal de la página */
+.home-container {
+    text-align: center;
+    padding: 9rem 5rem;
+    font-family: 'Arial', sans-serif;
+    background-color: #d7d7d7;
+    overflow: hidden;
+    min-height: 100vh;
+}
+
+.home-title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #005d8b;
+}
+
+.home-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: #5394ae;
+}
+
+/* Contenedor de las cards */
+.cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Estilo general de cada card */
+.home-card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px 20px;
+    width: 250px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Efecto hover en las cards */
+.home-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Icono dentro de la card */
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #007bff;
+}
+
+/* Botón dentro de la card */
+.card-button {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: linear-gradient(90deg, #005d8b, #5394ae);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+/* Hover del botón */
+.card-button:hover {
+    background-color: #0056b3;
+}
+
+/* Colores personalizados para cada tipo de card */
+.card-dashboard {
+    border-top: 5px solid #17a2b8;
+}
+
+.card-login {
+    border-top: 5px solid #28a745;
+}
+
+.card-register {
+    border-top: 5px solid #ffc107;
+}
