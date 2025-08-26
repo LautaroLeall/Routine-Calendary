@@ -1,0 +1,79 @@
+/* src/styles/SummaryCard.css */
+.sc-card {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 14px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(190, 230, 250, 0.1), rgba(190, 230, 250, 0.5));
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    min-width: 200px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.sc-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 30px rgba(2, 6, 23, 0.6);
+}
+
+.sc-icon {
+    min-width: 46px;
+    min-height: 46px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.9);
+}
+
+.sc-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.sc-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.sc-title {
+    font-size: 0.95rem;
+    color: #13678A;
+    letter-spacing: 0.02rem;
+}
+
+.sc-delta {
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.4);
+    color: #e6fff5;
+    font-weight: 700;
+}
+
+.sc-delta.pos {
+    color: #C8FFD1;
+    background: rgba(20, 160, 60, 0.9);
+}
+
+.sc-delta.neg {
+    color: #ffb3b3;
+    background: rgba(255, 60, 60, 0.9);
+}
+
+.sc-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #5394ae;
+    margin-bottom: 6px;
+}
+
+.sc-sub {
+    font-size: 0.82rem;
+    color: #9fb7c9;
+}

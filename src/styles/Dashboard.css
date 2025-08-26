@@ -1,0 +1,40 @@
+/* src/styles/Dashboard.css */
+.dashboard-main.container {
+    padding: 2rem 1rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    color: #13678A;
+}
+
+.dashboard-header h1 {
+    margin-bottom: 0.2rem;
+}
+
+.dashboard-header .muted {
+    color: #5394ae;
+    margin-bottom: 1rem;
+}
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.chart-area {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1rem;
+}
+
+.chart-left {
+    min-width: 0;
+}
+
+.chart-right .card-mini {
+    background: linear-gradient(90deg, #005d8b44, #5394ae44);
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid hsl(197, 36%, 50%);
+}
