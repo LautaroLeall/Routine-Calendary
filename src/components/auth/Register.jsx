@@ -6,11 +6,12 @@
 
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
-import { IoEyeSharp } from "react-icons/io5";  // Icono mostrar contraseña
-import { FaEyeSlash } from "react-icons/fa";   // Icono ocultar contraseña
-import UsageModal from "./UsageModal";         // Modal interactivo
-import "../../styles/Register.css";            // Estilos específicos
+import { Link, useNavigate } from "react-router-dom";
+import { IoEyeSharp } from "react-icons/io5"; 
+import { FaEyeSlash } from "react-icons/fa"; 
+import { RiExpandLeftLine } from "react-icons/ri";
+import UsageModal from "./UsageModal";  
+import "../../styles/Register.css";    
 
 export default function Register() {
     const { register } = useAuth();       // función para registrar usuario
@@ -36,7 +37,7 @@ export default function Register() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Maneja cambios en inputs de texto
-    const handleChange = (e) => 
+    const handleChange = (e) =>
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
     // Maneja selección de propósito desde el modal
@@ -85,115 +86,126 @@ export default function Register() {
     };
 
     return (
-        <div className="register-container">
-            <h2 className="register-title">Registro</h2>
-            <p className="register-subtitle">
-                Crea tu cuenta para empezar a organizar tus rutinas.
-            </p>
+        <div className="container">
+            <Link to="/" className="back-link-register">
+                <RiExpandLeftLine />
+            </Link>
+            <div className="register-container">
+                <h2 className="register-title">Registro</h2>
+                <p className="register-subtitle">
+                    Crea tu cuenta para empezar a organizar tus rutinas.
+                </p>
 
-            <form onSubmit={handleSubmit} className="register-form">
-                {/* Mensaje de error en validaciones */}
-                {error && <div className="alert alert-danger">{error}</div>}
+                <form onSubmit={handleSubmit} className="register-form">
+                    {/* Mensaje de error en validaciones */}
+                    {error && <div className="alert alert-danger">{error}</div>}
 
-                {/* Campo Email */}
-                <div className="form-group mb-3">
-                    <input
-                        name="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        type="email"
-                        className="form-control"
-                        placeholder="tu@correo.com"
-                        required
-                    />
-                </div>
-
-                {/* Campo Username */}
-                <div className="form-group mb-3">
-                    <input
-                        name="username"
-                        value={form.username}
-                        onChange={handleChange}
-                        className="form-control"
-                        placeholder="tu_usuario"
-                        required
-                    />
-                    <small className="text-muted">
-                        Lo usarás también para iniciar sesión.
-                    </small>
-                </div>
-
-                {/* Campo Contraseña */}
-                <div className="form-group password-group mb-3">
-                    <div className="password-input d-flex align-items-center">
+                    {/* Campo Email */}
+                    <div className="form-group mb-3">
                         <input
-                            name="password"
-                            value={form.password}
+                            name="email"
+                            value={form.email}
                             onChange={handleChange}
-                            type={showPassword ? "text" : "password"}
+                            type="email"
                             className="form-control"
-                            placeholder="contraseña"
+                            placeholder="tu@correo.com"
                             required
                         />
-                        <span
-                            className="password-toggle ms-2"
-                            onClick={() => setShowPassword((s) => !s)}
-                        >
-                            {showPassword ? <FaEyeSlash /> : <IoEyeSharp />}
-                        </span>
                     </div>
-                </div>
 
-                {/* Confirmar contraseña */}
-                <div className="form-group password-group mb-3">
-                    <div className="password-input d-flex align-items-center">
+                    {/* Campo Username */}
+                    <div className="form-group mb-3">
                         <input
-                            name="confirmPassword"
-                            value={form.confirmPassword}
+                            name="username"
+                            value={form.username}
                             onChange={handleChange}
-                            type={showConfirmPassword ? "text" : "password"}
                             className="form-control"
-                            placeholder="confirmar contraseña"
+                            placeholder="tu_usuario"
                             required
                         />
-                        <span
-                            className="password-toggle ms-2"
-                            onClick={() => setShowConfirmPassword((s) => !s)}
-                        >
-                            {showConfirmPassword ? <FaEyeSlash /> : <IoEyeSharp />}
-                        </span>
+                        <small className="text-muted">
+                            Lo usarás también para iniciar sesión.
+                        </small>
                     </div>
-                </div>
 
-                {/* Botón para abrir modal de propósito */}
-                <div className="form-group mb-4">
-                    <button
-                        type="button"
-                        className="btn-modal mb-1"
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        Seleccionar propósito
-                    </button>
-                    {form.purpose.length > 0 && (
-                        <p className="selected-purpose ms-1" style={{ fontSize: "0.8em" }}>
-                            Seleccionado: {form.purpose.join(", ")}
-                        </p>
-                    )}
-                </div>
+                    {/* Campo Contraseña */}
+                    <div className="form-group password-group mb-3">
+                        <div className="password-input d-flex align-items-center">
+                            <input
+                                name="password"
+                                value={form.password}
+                                onChange={handleChange}
+                                type={showPassword ? "text" : "password"}
+                                className="form-control"
+                                placeholder="contraseña"
+                                required
+                            />
+                            <span
+                                className="password-toggle ms-2"
+                                onClick={() => setShowPassword((s) => !s)}
+                            >
+                                {showPassword ? <FaEyeSlash /> : <IoEyeSharp />}
+                            </span>
+                        </div>
+                    </div>
 
-                {/* Botón de registro */}
-                <div className="d-flex justify-content-center">
-                    <button className="btn-register">Registrarme</button>
-                </div>
-            </form>
+                    {/* Confirmar contraseña */}
+                    <div className="form-group password-group mb-3">
+                        <div className="password-input d-flex align-items-center">
+                            <input
+                                name="confirmPassword"
+                                value={form.confirmPassword}
+                                onChange={handleChange}
+                                type={showConfirmPassword ? "text" : "password"}
+                                className="form-control"
+                                placeholder="confirmar contraseña"
+                                required
+                            />
+                            <span
+                                className="password-toggle ms-2"
+                                onClick={() => setShowConfirmPassword((s) => !s)}
+                            >
+                                {showConfirmPassword ? <FaEyeSlash /> : <IoEyeSharp />}
+                            </span>
+                        </div>
+                    </div>
 
-            {/* Modal de propósitos */}
-            <UsageModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onSelect={handlePurposeSelect}
-                initialSelected={form.purpose}
-            />
+                    {/* Botón para abrir modal de propósito */}
+                    <div className="form-group mb-4">
+                        <button
+                            type="button"
+                            className="btn-modal mb-1"
+                            onClick={() => setIsModalOpen(true)}
+                        >
+                            Seleccionar propósito
+                        </button>
+                        {form.purpose.length > 0 && (
+                            <p className="selected-purpose ms-1" style={{ fontSize: "0.8em" }}>
+                                Seleccionado: {form.purpose.join(", ")}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Botón de registro */}
+                    <div className="d-flex justify-content-center mb-3">
+                        <button className="btn-register">Registrarme</button>
+                    </div>
+
+                    <div className="d-flex justify-content-end">
+                        <Link to="/login" className="btn-link">
+                            ¿Ya tienes cuenta?
+                        </Link>
+                    </div>
+                </form>
+
+                {/* Modal de propósitos */}
+                <UsageModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onSelect={handlePurposeSelect}
+                    initialSelected={form.purpose}
+                />
+            </div>
         </div>
     );
 }
