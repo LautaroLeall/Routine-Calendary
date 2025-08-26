@@ -1,0 +1,16 @@
+/* src/styles/KPIChart.css */
+.kpi-chart-card {
+    background: linear-gradient(180deg, rgba(195, 230, 250, 0.2), rgba(195, 230, 250, 0.9));
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 8px 25px rgba(2, 6, 23, 0.6);
+    width: 100%;
+    min-height: 280px;
+}
+
+/* Evita ese rectángulo negro al hacer click sobre el SVG de Recharts */
+.kpi-chart-card .recharts-surface,
+.kpi-chart-card svg {
+    outline: none;
+    /* quita el outline por defecto */
+}
