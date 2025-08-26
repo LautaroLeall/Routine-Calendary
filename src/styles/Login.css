@@ -1,13 +1,21 @@
 /* src/styles/Login.css */
 /* Estilos principales del formulario de login */
-
 .login-container {
     max-width: 640px;
     margin: 12rem auto;
     padding: 2rem;
-    background: #63636347;
+    background: #4d6c8b50;
     border-radius: 1rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9);
+}
+
+.back-link-login {
+    position: absolute;
+    top: 18%;
+    left: 30%;
+    color: #005d8b;
+    font-size: 2rem;
+    text-decoration: none;
 }
 
 .login-title {
@@ -56,4 +64,21 @@
     transition: all 0.5s ease;
     background: linear-gradient(90deg, #00eaff, #007bff);
     box-shadow: 1px 5px 15px hsl(200, 100%, 25%);
-}   
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.btn-link:hover {
+    color: #0050a5;
+    text-shadow: 1px 5px 15px hsl(200, 100%, 25%);
+    transform: scale(0.95);
+    transition: all 0.3s ease;
+    text-decoration: underline;
+}
