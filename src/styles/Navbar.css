@@ -185,13 +185,3 @@
     transform: translateY(-3px);
     box-shadow: 0 12px 36px rgba(255, 70, 70, 0.18);
 }
-
-/* login link (if not authenticated) */
-.btn-login {
-    color: white;
-    background: linear-gradient(90deg, #005d8b44, #5394ae44);
-    padding: 8px 12px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-}
