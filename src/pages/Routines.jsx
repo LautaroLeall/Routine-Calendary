@@ -1,7 +1,7 @@
 // src/pages/Routines.jsx
 import React from 'react'
 import { useAuth } from "../hooks/useAuth";
-import NavBar from "../components/ui/Navbar";
+import NavBar from "../components/ui/NavBar";
 
 const Routines = () => {
     const { getCurrentUser } = useAuth();
