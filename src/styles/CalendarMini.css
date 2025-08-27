@@ -1,0 +1,73 @@
+/* src/styles/CalendarMini.css */
+.cm-mini {
+    margin-top: 1.5rem;
+    background: linear-gradient(180deg, rgba(195, 230, 250, 0.2), rgba(195, 230, 250, 0.5));
+    border-radius: 10px;
+    padding: 2rem;
+    width: 100%;
+    border: 1px solid hsl(198, 76%, 31%, 0.2);
+}
+
+.cm-mini.empty {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    padding: 16px;
+}
+
+.cm-title {
+    color: #13678A;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+}
+
+.cm-grid {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+}
+
+.cm-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 3rem;
+    transition: transform 0.2s ease;
+}
+
+.cm-day:hover {
+    transform: translateY(-2px);
+}
+
+.cm-day-label {
+    font-size: 0.8rem;
+    color: #13678A;
+    margin-bottom: 6px;
+}
+
+.cm-dot {
+    min-width: 34px;
+    min-height: 34px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(180deg, rgba(250, 130, 130, 0.2), rgba(250, 130, 130, 0.5));
+    color: #b0dfe6;
+    border: 3px outset rgba(255, 0, 0, 0.5);
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.cm-dot.active {
+    background: linear-gradient(90deg, #00c176, #00a86b);
+    color: white;
+    border: none;
+    box-shadow: 0 0 20px rgba(0, 160, 110);
+}
+
+.cm-day.today .cm-dot {
+    border: 3px outset  rgb(0, 100, 70);
+    box-shadow: 0 0 20px rgb(0, 52, 35);
+}
