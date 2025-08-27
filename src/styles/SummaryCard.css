@@ -5,7 +5,7 @@
     align-items: center;
     padding: 14px;
     border-radius: 12px;
-    background: linear-gradient(180deg, rgba(190, 230, 250, 0.1), rgba(190, 230, 250, 0.5));
+    background: linear-gradient(180deg, rgba(195, 230, 250, 0.2), rgba(195, 230, 250, 0.5));
     border: 1px solid rgba(255, 255, 255, 0.9);
     min-width: 200px;
     box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
