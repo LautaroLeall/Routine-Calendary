@@ -61,15 +61,15 @@ export default function Login() {
                         />
                     </div>
 
-                    <div className="form-group mb-3">
-                        <div className="input-group d-flex align-items-center">
+                    <div className="form-group password-group mb-3">
+                        <div className="password-input d-flex align-items-center">
                             <input
                                 name="password"
                                 value={form.password}
                                 onChange={handleChange}
                                 type={showPasswords ? "text" : "password"}
-                                placeholder="contraseña"
                                 className="form-control"
+                                placeholder="contraseña"
                                 required
                             />
                             <span
