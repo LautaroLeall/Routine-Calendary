@@ -11,7 +11,7 @@ import { useMemo } from "react";
 import NavBar from "../components/ui/NavBar";
 import SummaryCard from "../components/ui/SummaryCard";
 import KPIChart from "../components/charts/KPIChart";
-import CalendarMini from "../components/calendar/CalendarMini";
+import CalendarMini from "../components/ui/CalendarMini";
 import { useAppData } from "../hooks/useAppData";
 import { computeKpisFromLogs } from "../utils/metrics";
 import { FaCheck, FaTimes, FaClock, FaExclamation } from "react-icons/fa";
