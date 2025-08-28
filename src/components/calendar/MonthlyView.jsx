@@ -1,3 +1,4 @@
+// src/components/calendar/MonthlyView.jsx
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
@@ -133,8 +134,8 @@ export default function MonthlyView({ calendar: activeCalendar }) {
             {modalData && (
                 <ActivitiesModal
                     isOpen={!!modalData}
-                    routines={modalData.routines}
-                    date={modalData.date}
+                    routines={modalData?.routines || []}
+                    date={modalData?.date}
                     onClose={() => setModalData(null)}
                 />
             )}

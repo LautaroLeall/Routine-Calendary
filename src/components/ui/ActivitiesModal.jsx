@@ -7,7 +7,7 @@ export default function ActivitiesModal({ isOpen, routines = [], date, onClose }
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true">
+        <div className="modal-overlay" role="dialog" aria-modal="true">
             <div className="modal-content activities-modal" onClick={(e) => e.stopPropagation()}>
                 <h2 className="modal-title">
                     Actividades del {dayjs(date).format("DD MMM YYYY")}
