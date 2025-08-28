@@ -1,0 +1,62 @@
+.calendar-card {
+    background: linear-gradient(180deg, rgba(218, 245, 251, 0.6), rgba(218, 245, 251, 0.9));
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid hsl(197, 36%, 50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-title {
+    font-weight: 700;
+    color: #114b60;
+}
+
+.card-type {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    color: #0b6b7f;
+}
+
+.card-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.card-actions .btn {
+    flex: 1;
+    background: linear-gradient(90deg, #005d8b44, #5394ae44);
+    border: 1px solid rgba(19, 103, 138, 0.5);
+    color: #13678A;
+    font-size: 1rem;
+    letter-spacing: 0.1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all .22s ease;
+}
+
+.btn-open:hover {
+    background: linear-gradient(90deg, #005d8b90, #5394ae50);
+    box-shadow: 0 4px 15px rgba(0, 93, 139, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-clone:hover {
+    background: linear-gradient(90deg, #007f5a90, #00c17650);
+    box-shadow: 0 4px 15px rgba(0, 193, 118, 0.5);
+    transform: translateY(-2px);
+}
+
+.btn-delete:hover {
+    background: linear-gradient(90deg, #89170090, #ff3b3b50);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.5);
+    transform: translateY(-2px);
+}
