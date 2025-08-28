@@ -8,7 +8,7 @@
 
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import "../../styles/UsageModal.css";
+import "../../styles/RegisterModal.css";
 
 export default function UsageModal({ isOpen, onClose, onConfirm, onSelect, initialSelected = [] }) {
     // Diseño:

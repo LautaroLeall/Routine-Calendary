@@ -10,7 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { IoEyeSharp } from "react-icons/io5"; 
 import { FaEyeSlash } from "react-icons/fa"; 
 import { RiExpandLeftLine } from "react-icons/ri";
-import UsageModal from "./UsageModal";  
+import UsageModal from "../ui/RegisterModal";  
 import "../../styles/Register.css";    
 
 export default function Register() {
