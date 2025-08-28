@@ -1,0 +1,46 @@
+/* src/styles/CalendarShell.css */
+.calendar-shell {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.calendar-shell-left h1 {
+    margin: 0 0 0.25rem 0;
+}
+
+.calendar-shell .muted {
+    color: #5394ae;
+    margin: 0;
+}
+
+.calendar-tabs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tab-btn {
+    color: #13678A;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #005d8b44, #5394ae44);
+    transition: all .22s ease;
+}
+
+.tab-btn:hover {
+    color: white;
+    background: linear-gradient(90deg, #005d8b, #5394ae);
+    transform: scale(0.95);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+}
+
+.tab-btn.active {
+    background: #13678a;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(19, 103, 138, 0.12);
+}
