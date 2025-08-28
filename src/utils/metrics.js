@@ -98,8 +98,11 @@ export function computeKpisFromLogs(logs = [], options = {}) {
         const curr = countsCur[key] || 0;
         const prev = countsPrev[key] || 0;
         const delta = formatDeltaPct(curr, prev);
-        return { key, title, value: curr, delta };
+        const pct = totalCur ? (curr / totalCur) * 100 : 0;
+        const pctText = totalCur === 0 ? "0%" : (pct < 1 ? `${pct.toFixed(1)}%` : `${Math.round(pct)}%`);
+        return { key, title, value: curr, delta, percent: pct, percentText: pctText };
     });
+
 
     // kpiData: valor numérico y pct (texto) para usar en leyenda/tooltip
     const kpiData = STATUS_ORDER.map(({ key, title, color }) => {

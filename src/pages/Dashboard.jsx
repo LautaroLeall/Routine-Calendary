@@ -33,10 +33,10 @@ export default function Dashboard() {
     const activeCalendar = userData?.calendars?.[userData?.activeCalendarId] || null;
 
     // --- 3) Calcular KPIs ---
-    // Solo se calculan si hay logs, para no ejecutar lógica innecesaria.
-    const { summary, kpiData } = useMemo(() => {
+    // Ahora también recuperamos meta (con info del rango de fechas).
+    const { summary, kpiData, meta } = useMemo(() => {
         if (logs.length === 0) {
-            return { summary: [], kpiData: [] };
+            return { summary: [], kpiData: [], meta: { days: 0, start: null, end: null } };
         }
         return computeKpisFromLogs(logs, { days: 7 });
     }, [logs]);
@@ -54,7 +54,6 @@ export default function Dashboard() {
     }
 
     // --- 5) Configuración de summary cards ---
-    // Mapear summary con iconos y colores
     const summaryCards = [
         { title: "Completadas", icon: <FaCheck />, accent: "#00c176" },
         { title: "Saltadas", icon: <FaTimes />, accent: "#ff8a65" },
@@ -63,7 +62,6 @@ export default function Dashboard() {
     ];
 
     // --- 6) Early return si no hay datos de usuario ---
-    // Esto solo afecta al render, todos los hooks ya fueron llamados
     if (!userData) {
         return (
             <>
@@ -87,6 +85,12 @@ export default function Dashboard() {
                     <p className="muted">
                         Resumen rápido de tu actividad y estado actual de tus rutinas.
                     </p>
+                    {/*  mostrar rango de fechas analizado */}
+                    {meta?.days > 0 && (
+                        <p className="muted small">
+                            Analizando últimos {meta.days} días ({meta.start} → {meta.end})
+                        </p>
+                    )}
                 </header>
 
                 {/* KPI cards */}

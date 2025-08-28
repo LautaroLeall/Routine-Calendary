@@ -1,0 +1,38 @@
+/* src/styles/CalenderList.css */
+/* List styles */
+.calendar-list .list-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 10px;
+    background: rgba(19, 103, 138, 0.04);
+}
+
+.btn-new-calendar {
+    padding: 0.45rem 0.85rem;
+    background: linear-gradient(90deg, #02fe9d95, #00a86b);
+    color: #006739;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.5s ease;
+}
+
+.btn-new-calendar:hover {
+    background: linear-gradient(90deg, #00a86b, #02fe9d95);
+    color: #006739;
+    border: 1px solid #006739;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+    transform: scale(0.95);
+}

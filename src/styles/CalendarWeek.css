@@ -1,0 +1,162 @@
+/* src/styles/CalendarWeek.css */
+
+/* Contenedor principal */
+.weekly-view {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Controles arriba */
+.weekly-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.weekly-controls .title-block h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #114b60;
+}
+
+.weekly-controls .muted.small {
+    margin: 0;
+    color: #5394ae;
+    font-size: 0.85rem;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn.small {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(19, 103, 138, 0.12);
+    background: white;
+    cursor: pointer;
+}
+
+.btn.small.primary {
+    background: #ffd54f;
+    border-color: #ffd54f;
+}
+
+/* Grid semanal: 7 columnas */
+.week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+/* Card del día (tamaño uniforme) */
+.weekly-view .day-cell {
+    border-radius: 12px;
+    padding: 10px;
+    border: 1px solid rgba(0, 140, 160, 0.12);
+    display: flex;
+    flex-direction: column;
+    height: 180px;
+    /* ← altura fija */
+    overflow: hidden;
+    /* ← evita que el contenido estire la card */
+    transition: box-shadow 0.2s ease;
+    /* hover limpio sin scale */
+}
+
+/* Hover sin "romper" layout */
+.weekly-view .day-cell:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* Hoy (borde + sombra) */
+.weekly-view .day-cell.today {
+    border: 3px outset rgb(0, 139, 160);
+    box-shadow: 0 0 20px rgba(0, 118, 136, 0.3);
+}
+
+/* Colores pedidos */
+.weekly-view .day-cell.day-has-event {
+    background: linear-gradient(180deg, rgba(195, 230, 250, 0.2), rgba(195, 230, 250, 0.5)) !important;
+}
+
+.weekly-view .day-cell.day-no-event {
+    background: linear-gradient(180deg, rgba(250, 130, 130, 0.2), rgba(250, 130, 130, 0.5)) !important;
+}
+
+/* Header del día */
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.day-name {
+    font-weight: 700;
+    color: #0b6b7f;
+}
+
+.day-date {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #114b60;
+}
+
+/* Cuerpo */
+.day-body {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.no-events {
+    color: #0b6b7f;
+    opacity: 0.8;
+    text-align: center;
+}
+
+/* Footer */
+.day-footer {
+    margin-top: 8px;
+    text-align: center;
+    color: #5394ae;
+    font-size: 0.75rem;
+}
+
+/* Modal */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.90);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    padding: 2rem;
+    max-width: 650px;
+    width: 100%;
+    text-align: center;
+    animation: slideUp 0.4s ease;
+}
+
+/* Responsive: scroll horizontal en móviles */
+@media (max-width: 900px) {
+    .week-grid {
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(220px, 1fr);
+        overflow-x: auto;
+        padding-bottom: 6px;
+    }
+}

@@ -1,0 +1,82 @@
+.activities-modal {
+    max-width: 500px;
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    animation: slideUp 0.3s ease;
+}
+
+.activities-list {
+    list-style: none;
+    margin: 1rem 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.activity-item {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+    transition: background 0.3s ease;
+}
+
+.activity-item:hover {
+    background: #e9f3ff;
+    border-color: #007bff;
+}
+
+.activity-title {
+    font-weight: bold;
+    color: #333;
+}
+
+.activity-desc {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.3rem;
+}
+
+.no-activities {
+    color: #999;
+    font-style: italic;
+    margin: 1.5rem 0;
+}
+
+.modal-actions {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.btn-confirm {
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(90deg, #007bff, #00eaff);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    transition: 0.3s ease;
+}
+
+.btn-confirm:hover {
+    background: linear-gradient(90deg, #00eaff, #007bff);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+.btn-cancel{
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(90deg, #ff6b6b, #ff3b3b);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    transition: 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: linear-gradient(90deg, #ff3b3b, #ff6b6b);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
