@@ -34,7 +34,7 @@ export default function ActivitiesModal({ isOpen, routines = [], date, onClose }
                         className="btn-confirm w-75"
                         onClick={() => {
                             onClose();
-                            navigate("/routine");
+                            navigate("/routines");
                         }}
                     >
                         Agregar actividad
