@@ -1,11 +1,11 @@
 // src/pages/Dashboard.jsx
-// Dashboard conectado a datos reales (useAppData).
+// Dashboard conectado a datos reales mediante useAppData.
 // Muestra:
-//   * Summary KPIs (últimos 7 días)
-//   * Gráfico KPI
-//   * CalendarMini (modo semanal por defecto)
-//   * Actividad reciente
-// Si no hay datos → fallback a mensaje.
+//   - Summary KPIs (últimos 7 días)
+//   - Gráfico KPI
+//   - CalendarMini (modo semanal por defecto)
+//   - Actividad reciente
+// Si no hay datos, muestra mensaje de fallback.
 
 import { useMemo } from "react";
 import NavBar from "../components/ui/NavBar";
@@ -18,31 +18,24 @@ import { FaCheck, FaTimes, FaClock, FaExclamation } from "react-icons/fa";
 import "../styles/Dashboard.css";
 
 export default function Dashboard() {
-    // --- 0) Hook custom → devuelve [userData, saveUserData] ---
-    const [userData, saveUserData] = useAppData();
+    // --- 0) Hook custom: devuelve un objeto { userData, saveUserData, ... } ---
+    const { userData, saveUserData } = useAppData();
 
     // --- 1) Normalización de logs ---
     // Siempre devolvemos un array, aunque userData.logs sea undefined.
-    // useMemo evita recrear un array en cada render.
-    const logs = useMemo(
-        () => (Array.isArray(userData?.logs) ? userData.logs : []),
-        [userData?.logs]
-    );
+    // useMemo evita recalcular en cada render.
+    const logs = useMemo(() => (Array.isArray(userData?.logs) ? userData.logs : []), [userData?.logs]);
 
     // --- 2) Calendario activo ---
     const activeCalendar = userData?.calendars?.[userData?.activeCalendarId] || null;
 
     // --- 3) Calcular KPIs ---
-    // Ahora también recuperamos meta (con info del rango de fechas).
     const { summary, kpiData, meta } = useMemo(() => {
-        if (logs.length === 0) {
-            return { summary: [], kpiData: [], meta: { days: 0, start: null, end: null } };
-        }
+        if (logs.length === 0) return { summary: [], kpiData: [], meta: { days: 0, start: null, end: null } };
         return computeKpisFromLogs(logs, { days: 7 });
     }, [logs]);
 
-    // --- 4) Demo opcional ---
-    // Seed de datos de prueba si logs están vacíos
+    // --- 4) Demo opcional para pruebas ---
     const ensureDemo = false;
     if (ensureDemo && logs.length === 0 && userData) {
         const todayISO = new Date().toISOString().split("T")[0];
@@ -82,10 +75,7 @@ export default function Dashboard() {
                 {/* Header */}
                 <header className="dashboard-header">
                     <h1>Dashboard</h1>
-                    <p className="muted">
-                        Resumen rápido de tu actividad y estado actual de tus rutinas.
-                    </p>
-                    {/*  mostrar rango de fechas analizado */}
+                    <p className="muted">Resumen rápido de tu actividad y estado actual de tus rutinas.</p>
                     {meta?.days > 0 && (
                         <p className="muted small">
                             Analizando últimos {meta.days} días ({meta.start} → {meta.end})
@@ -122,13 +112,9 @@ export default function Dashboard() {
                             <h3>Actividad reciente</h3>
                             <ul>
                                 {logs.slice(-6).reverse().map((l, i) => (
-                                    <li key={`${l.date}-${i}`}>
-                                        {l.date}: {l.status} — {l.routineId}
-                                    </li>
+                                    <li key={`${l.date}-${i}`}>{l.date}: {l.status} — {l.routineId}</li>
                                 ))}
-                                {logs.length === 0 && (
-                                    <li>No hay actividad reciente.</li>
-                                )}
+                                {logs.length === 0 && <li>No hay actividad reciente.</li>}
                             </ul>
                         </div>
                     </aside>
