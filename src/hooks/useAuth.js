@@ -1,6 +1,10 @@
-// src/hooks/useAuth.js
-// - Hook de conveniencia para consumir AuthContext.
-// - Debe estar en su propio archivo para evitar advertencias del hot-reload.
+// src/hooks/useAuth.js 
+// Hook de conveniencia para consumir AuthContext.
+// Retorna todos los métodos y datos del AuthProvider:
+//   - user, isAuthenticated
+//   - register, login, logout, updateUser, changePassword
+//   - getCurrentUser, getPublicUserById
+// Debe usarse siempre dentro de un <AuthProvider>.
 
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
