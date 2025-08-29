@@ -1,22 +1,16 @@
-// src/components/UsageModal.jsx
-// - Modal interactivo para que el usuario seleccione el propósito de uso.
-// - Usa "cards" con hover y estados seleccionados.
-// - Debe elegirse al menos una opción antes de confirmar.
-// - Envía la selección al componente padre (ej. Register).
-// - Props aceptadas (compatibles): isOpen, onClose, onConfirm, onSelect, initialSelected.
-//   Nota: onConfirm / onSelect son alias: el modal llamará a cualquiera que le pases.
+// src/components/ui/RegisterModal.jsx
+// Modal interactivo para que el usuario seleccione el propósito de uso.
+// - Compatible con Register.jsx y otros padres.
+// - Props: isOpen (boolean), onClose (func), onConfirm (func), onSelect (func alias), initialSelected (array).
+// - Permite selección múltiple y requiere al menos una opción antes de confirmar.
+// - Mejoras: accesibilidad con aria-label dinámico, toggleOption memoizado, comentarios detallados.
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Swal from "sweetalert2";
 import "../../styles/RegisterModal.css";
 
 export default function UsageModal({ isOpen, onClose, onConfirm, onSelect, initialSelected = [] }) {
-    // Diseño:
-    // - Se acepta tanto `onConfirm` como `onSelect` (por compatibilidad con distintos padres).
-    // - `initialSelected` se usa para inicializar/sincronizar el estado cuando se reabre el modal.
-    // - Al confirmar, llamamos a ambos callbacks si existen y luego cerramos el modal.
-
-    // Opciones disponibles (id, label, description)
+    // --- Opciones disponibles ---
     const options = [
         { id: "gym", label: "Gym / Entrenamiento", description: "Planifica tus rutinas de ejercicios y progreso físico." },
         { id: "work", label: "Trabajo / Productividad", description: "Organiza tus tareas laborales y proyectos." },
@@ -25,41 +19,38 @@ export default function UsageModal({ isOpen, onClose, onConfirm, onSelect, initi
         { id: "other", label: "Otro", description: "Usos personales o personalizados." },
     ];
 
-    // Estado local de selección múltiple
+    // --- Estado local ---
     const [selected, setSelected] = useState(Array.isArray(initialSelected) ? initialSelected : []);
 
-    // Sincronizar selected cuando cambia initialSelected (por ejemplo al reabrir el modal)
+    // --- Sincronizar selected con initialSelected al abrir/cerrar modal ---
     useEffect(() => {
         setSelected(Array.isArray(initialSelected) ? initialSelected : []);
     }, [initialSelected, isOpen]);
 
-    // Alterna selección de una opción (agregar / quitar)
-    const toggleOption = (id) => {
+    // --- Toggle selección de una opción ---
+    const toggleOption = useCallback((id) => {
         setSelected(prev =>
             prev.includes(id) ? prev.filter(opt => opt !== id) : [...prev, id]
         );
-    };
+    }, []);
 
-    // Función interna que llama a las props del padre de forma segura
+    // --- Llamadas seguras a callbacks del padre ---
     const callParentWithSelected = (arr) => {
         try {
-            // Llamamos a onConfirm si lo pasaron
             if (typeof onConfirm === "function") onConfirm(arr);
         } catch (err) {
             console.error("Error en onConfirm callback:", err);
         }
         try {
-            // Llamamos a onSelect si lo pasaron (alias)
             if (typeof onSelect === "function") onSelect(arr);
         } catch (err) {
             console.error("Error en onSelect callback:", err);
         }
     };
 
-    // Confirmar selección: valida, llama al padre, y cierra modal
+    // --- Confirmar selección ---
     const handleConfirm = () => {
         if (!Array.isArray(selected) || selected.length === 0) {
-            // SweetAlert2 para feedback bonito
             Swal.fire({
                 icon: "warning",
                 title: "Selecciona al menos una opción",
@@ -72,14 +63,12 @@ export default function UsageModal({ isOpen, onClose, onConfirm, onSelect, initi
             return;
         }
 
-        // Llamamos al padre (onConfirm / onSelect). Lo envolvemos en try/catch por seguridad.
         callParentWithSelected(selected);
 
-        // Cerramos modal
         if (typeof onClose === "function") onClose();
     };
 
-    // Si no está abierto, no renderizamos nada
+    // --- No renderizamos si el modal está cerrado ---
     if (!isOpen) return null;
 
     return (
@@ -89,7 +78,7 @@ export default function UsageModal({ isOpen, onClose, onConfirm, onSelect, initi
                 <p className="modal-subtitle">Elige una o varias opciones para personalizar tu experiencia.</p>
 
                 <div className="options-grid">
-                    {options.map(opt => {
+                    {options.length > 0 && options.map(opt => {
                         const isSelected = selected.includes(opt.id);
                         return (
                             <div
@@ -100,15 +89,15 @@ export default function UsageModal({ isOpen, onClose, onConfirm, onSelect, initi
                                 tabIndex={0}
                                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") toggleOption(opt.id); }}
                                 aria-pressed={isSelected}
+                                aria-label={`${opt.label}${isSelected ? ", seleccionado" : ""}`}
                             >
-                                {/* Si está seleccionada: mostramos título + descripción */}
+                                {/* Mostrar título y descripción si está seleccionado */}
                                 {isSelected ? (
                                     <>
                                         <h3>{opt.label}</h3>
                                         <p>{opt.description}</p>
                                     </>
                                 ) : (
-                                    // Si NO está seleccionada: show preview (título centrado; descripción aparece en hover vía CSS)
                                     <div className="card-preview">
                                         <h3>{opt.label}</h3>
                                         <p>{opt.description}</p>
