@@ -3,52 +3,50 @@
 // - Permite mostrar/ocultar contraseñas con íconos.
 // - Incluye modal (UsageModal) para elegir propósito(s) del calendario.
 // - Llama a register() del AuthContext y redirige al dashboard.
-
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
-import { IoEyeSharp } from "react-icons/io5"; 
-import { FaEyeSlash } from "react-icons/fa"; 
+import { IoEyeSharp } from "react-icons/io5";
+import { FaEyeSlash } from "react-icons/fa";
 import { RiExpandLeftLine } from "react-icons/ri";
-import UsageModal from "../ui/RegisterModal";  
-import "../../styles/Register.css";    
+import UsageModal from "../ui/RegisterModal";
+import "../../styles/Register.css";
 
 export default function Register() {
-    const { register } = useAuth();       // función para registrar usuario
+    const { register } = useAuth();
     const navigate = useNavigate();
 
-    // Estado del formulario
     const [form, setForm] = useState({
         email: "",
         username: "",
         password: "",
         confirmPassword: "",
-        purpose: [] // el usuario puede elegir uno o varios propósitos desde el modal
+        purpose: [],
     });
 
-    // Estados independientes para mostrar/ocultar contraseñas
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-    // Estado de errores de validación
     const [error, setError] = useState("");
-
-    // Estado del modal
+    const [isSubmitting, setIsSubmitting] = useState(false); // Loader/disable
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Maneja cambios en inputs de texto
+    // --- Maneja cambios en inputs ---
     const handleChange = (e) =>
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-    // Maneja selección de propósito desde el modal
+    // --- Maneja selección de propósito ---
     const handlePurposeSelect = (selected) => {
         setForm((prev) => ({ ...prev, purpose: selected }));
     };
 
-    // Validaciones personalizadas del formulario
+    // --- Validaciones del formulario ---
     const validateForm = () => {
-        if (!form.email.includes("@")) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(form.email.trim())) {
             throw new Error("Debes ingresar un email válido.");
+        }
+        if (form.username.trim().length < 3) {
+            throw new Error("El nombre de usuario debe tener al menos 3 caracteres.");
         }
         if (form.password.length < 6) {
             throw new Error("La contraseña debe tener al menos 6 caracteres.");
@@ -61,27 +59,27 @@ export default function Register() {
         }
     };
 
-    // Maneja envío del formulario
+    // --- Maneja envío del formulario ---
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setIsSubmitting(true);
 
         try {
-            // Validamos antes de enviar
             validateForm();
 
-            // Creamos el usuario con AuthContext
             await register({
-                email: form.email.trim(),
+                email: form.email.trim().toLowerCase(),
                 username: form.username.trim(),
                 password: form.password,
                 purpose: form.purpose,
             });
 
-            // Redirigimos al dashboard
             navigate("/dashboard");
         } catch (err) {
             setError(err.message || "Error en el registro");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -90,6 +88,7 @@ export default function Register() {
             <Link to="/" className="back-link-register">
                 <RiExpandLeftLine />
             </Link>
+
             <div className="register-container">
                 <h2 className="register-title">Registro</h2>
                 <p className="register-subtitle">
@@ -97,10 +96,10 @@ export default function Register() {
                 </p>
 
                 <form onSubmit={handleSubmit} className="register-form">
-                    {/* Mensaje de error en validaciones */}
+                    {/* Mensaje de error */}
                     {error && <div className="alert alert-danger">{error}</div>}
 
-                    {/* Campo Email */}
+                    {/* Email */}
                     <div className="form-group mb-3">
                         <input
                             name="email"
@@ -113,7 +112,7 @@ export default function Register() {
                         />
                     </div>
 
-                    {/* Campo Username */}
+                    {/* Username */}
                     <div className="form-group mb-3">
                         <input
                             name="username"
@@ -128,7 +127,7 @@ export default function Register() {
                         </small>
                     </div>
 
-                    {/* Campo Contraseña */}
+                    {/* Password */}
                     <div className="form-group password-group mb-3">
                         <div className="password-input d-flex align-items-center">
                             <input
@@ -149,7 +148,7 @@ export default function Register() {
                         </div>
                     </div>
 
-                    {/* Confirmar contraseña */}
+                    {/* Confirm Password */}
                     <div className="form-group password-group mb-3">
                         <div className="password-input d-flex align-items-center">
                             <input
@@ -170,7 +169,7 @@ export default function Register() {
                         </div>
                     </div>
 
-                    {/* Botón para abrir modal de propósito */}
+                    {/* Propósito */}
                     <div className="form-group mb-4">
                         <button
                             type="button"
@@ -188,7 +187,9 @@ export default function Register() {
 
                     {/* Botón de registro */}
                     <div className="d-flex justify-content-center mb-3">
-                        <button className="btn-register">Registrarme</button>
+                        <button className="btn-register" disabled={isSubmitting}>
+                            {isSubmitting ? "Registrando..." : "Registrarme"}
+                        </button>
                     </div>
 
                     <div className="d-flex justify-content-end">

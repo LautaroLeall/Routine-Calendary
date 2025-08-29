@@ -1,17 +1,20 @@
 // src/context/AuthProvider.jsx
-// - Contiene únicamente el componente AuthProvider (export default).
-// - Usa AuthContext importado desde authContext.js.
-// - Encapsula la lógica de users/session en localStorage (prototipo).
-// - Mejora: expone `user` y `isAuthenticated` directamente, y memoiza funciones para evitar re-renders innecesarios.
+// 1. Se reemplaza el almacenamiento de contraseñas en texto plano por bcryptjs (passwordHash).
+// 2. Normalización de email/username (trim + toLowerCase para emails).
+// 3. Función changePassword añadida para actualizar la contraseña de manera segura.
+// 4. updateUser valida duplicados de email/username antes de actualizar.
+// 5. getCurrentUser y getPublicUserById no exponen passwordHash.
+// 6. register y login ahora son async para manejar hashing de contraseñas.
+// 7. Uso consistente de useCallback + useMemo para evitar re-renders innecesarios.
 
 import { useEffect, useState, useMemo, useCallback } from "react";
+import bcrypt from "bcryptjs";
 import { AuthContext } from "./authContext";
 
 const STORAGE_KEY = "routine_calendary_users";
 const SESSION_KEY = "routine_calendary_current_user_id";
 
 export default function AuthProvider({ children }) {
-    // users: array de usuarios registrados (prototipo, guardado en localStorage)
     const [users, setUsers] = useState(() => {
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
@@ -22,7 +25,6 @@ export default function AuthProvider({ children }) {
         }
     });
 
-    // currentUserId: id del usuario en sesión (string) o null
     const [currentUserId, setCurrentUserId] = useState(() => {
         try {
             return localStorage.getItem(SESSION_KEY) || null;
@@ -32,7 +34,6 @@ export default function AuthProvider({ children }) {
         }
     });
 
-    // Persistir users en localStorage cuando cambian
     useEffect(() => {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
@@ -41,7 +42,6 @@ export default function AuthProvider({ children }) {
         }
     }, [users]);
 
-    // Persistir currentUserId en localStorage cuando cambia (o remover si es null)
     useEffect(() => {
         try {
             if (currentUserId) localStorage.setItem(SESSION_KEY, currentUserId);
@@ -51,38 +51,42 @@ export default function AuthProvider({ children }) {
         }
     }, [currentUserId]);
 
-    // --- Helpers internos (no expuestos directamente, salvo getCurrentUser) ---
+    // --- Helpers internos ---
     const findUserByEmail = useCallback(
-        (email) => users.find((u) => u.email === email),
+        (email) => users.find((u) => u.email === email.trim().toLowerCase()),
         [users]
     );
 
     const findUserByUsername = useCallback(
-        (username) => users.find((u) => u.username === username),
+        (username) => users.find((u) => u.username === username.trim()),
         [users]
     );
 
-    // Registrar nuevo usuario (prototipo).
-    // - Valida campos, revisa duplicados, guarda en users y setea sesión.
-    // - RETURN: id del nuevo usuario.
+    // --- Registro ---
     const register = useCallback(
-        ({ email, username, password, purpose = [] }) => {
-            if (!email || !username || !password) throw new Error("Email, usuario y contraseña son requeridos.");
-            if (findUserByEmail(email)) throw new Error("El email ya está registrado.");
-            if (findUserByUsername(username)) throw new Error("El nombre de usuario ya está en uso.");
+        async ({ email, username, password, purpose = [] }) => {
+            if (!email || !username || !password)
+                throw new Error("Email, usuario y contraseña son requeridos.");
+
+            const normalizedEmail = email.trim().toLowerCase();
+            const normalizedUsername = username.trim();
+
+            if (findUserByEmail(normalizedEmail)) throw new Error("El email ya está registrado.");
+            if (findUserByUsername(normalizedUsername)) throw new Error("El nombre de usuario ya está en uso.");
 
             const id = Date.now().toString();
+            const passwordHash = await bcrypt.hash(password, 10);
+
             const nuevo = {
                 id,
-                email,
-                username,
-                password, // << SOLO PROTOTIPO: en producción usar hashing + no guardar plaintext.
+                email: normalizedEmail,
+                username: normalizedUsername,
+                passwordHash,
                 purpose: Array.isArray(purpose) ? purpose : [purpose],
                 tipoCalendario: null,
-                rutinas: []
+                rutinas: [],
             };
 
-            // Agregamos el usuario y lo dejamos logueado
             setUsers((prev) => [...prev, nuevo]);
             setCurrentUserId(id);
 
@@ -91,58 +95,114 @@ export default function AuthProvider({ children }) {
         [findUserByEmail, findUserByUsername]
     );
 
-    // Login prototipo: acepta email o username en 'identifier' y contraseña en 'password'.
-    // Si coincide, setea currentUserId.
+    // --- Login ---
     const login = useCallback(
-        ({ identifier, password }) => {
+        async ({ identifier, password }) => {
             if (!identifier || !password) throw new Error("Usuario (email o username) y contraseña son requeridos.");
 
-            const user = users.find((u) =>
-                (u.email === identifier || u.username === identifier) && u.password === password
+            const user = users.find(
+                (u) =>
+                    (u.email === identifier.trim().toLowerCase() || u.username === identifier.trim())
             );
 
             if (!user) throw new Error("Credenciales inválidas.");
+
+            const valid = await bcrypt.compare(password, user.passwordHash);
+            if (!valid) throw new Error("Credenciales inválidas.");
+
             setCurrentUserId(user.id);
             return user.id;
         },
         [users]
     );
 
-    // Logout: limpia la sesión
+    // --- Logout ---
     const logout = useCallback(() => {
         setCurrentUserId(null);
     }, []);
 
-    // Actualizar datos de un usuario (patch parcial)
-    const updateUser = useCallback((id, patch) => {
-        setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, ...patch } : u)));
-    }, []);
+    // --- Update user ---
+    const updateUser = useCallback(
+        (id, patch) => {
+            setUsers((prev) =>
+                prev.map((u) => {
+                    if (u.id !== id) return u;
 
-    // Devuelve el usuario conectado o null
+                    const updated = { ...u, ...patch };
+
+                    if (patch.email) {
+                        const normalizedEmail = patch.email.trim().toLowerCase();
+                        if (users.some((other) => other.id !== id && other.email === normalizedEmail))
+                            throw new Error("El email ya está en uso.");
+                        updated.email = normalizedEmail;
+                    }
+
+                    if (patch.username) {
+                        const normalizedUsername = patch.username.trim();
+                        if (users.some((other) => other.id !== id && other.username === normalizedUsername))
+                            throw new Error("El nombre de usuario ya está en uso.");
+                        updated.username = normalizedUsername;
+                    }
+
+                    return updated;
+                })
+            );
+        },
+        [users]
+    );
+
+    // --- Change password ---
+    const changePassword = useCallback(
+        async (id, currentPassword, newPassword) => {
+            const user = users.find((u) => u.id === id);
+            if (!user) throw new Error("Usuario no encontrado.");
+            const valid = await bcrypt.compare(currentPassword, user.passwordHash);
+            if (!valid) throw new Error("Contraseña actual incorrecta.");
+            const newHash = await bcrypt.hash(newPassword, 10);
+            updateUser(id, { passwordHash: newHash });
+            return true;
+        },
+        [users, updateUser]
+    );
+
+    // --- Obtener usuario ---
     const getCurrentUser = useCallback(() => {
-        return users.find((u) => u.id === currentUserId) || null;
+        const u = users.find((u) => u.id === currentUserId);
+        if (!u) return null;
+        const { passwordHash: _passwordHash, ...publicData } = u;
+        return publicData;
     }, [users, currentUserId]);
 
-    // Exponemos `user` y `isAuthenticated` derivados (memoizados)
+    const getPublicUserById = useCallback(
+        (id) => {
+            const u = users.find((u) => u.id === id);
+            if (!u) return null;
+            const { passwordHash: _passwordHash, ...publicData } = u;
+            return publicData;
+        },
+        [users]
+    );
+
+    // --- Memoized ---
     const user = useMemo(() => getCurrentUser(), [getCurrentUser]);
     const isAuthenticated = useMemo(() => Boolean(user), [user]);
 
-    // Value del contexto
-    const contextValue = useMemo(() => ({
-        users,
-        currentUserId,
-        user,               // usuario ya resuelto (o null)
-        isAuthenticated,    // booleano útil
-        register,
-        login,
-        logout,
-        updateUser,
-        getCurrentUser
-    }), [users, currentUserId, user, isAuthenticated, register, login, logout, updateUser, getCurrentUser]);
-
-    return (
-        <AuthContext.Provider value={contextValue}>
-            {children}
-        </AuthContext.Provider>
+    const contextValue = useMemo(
+        () => ({
+            users,
+            currentUserId,
+            user,
+            isAuthenticated,
+            register,
+            login,
+            logout,
+            updateUser,
+            changePassword,
+            getCurrentUser,
+            getPublicUserById,
+        }),
+        [users, currentUserId, user, isAuthenticated, register, login, logout, updateUser, changePassword, getCurrentUser, getPublicUserById]
     );
+
+    return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 }
