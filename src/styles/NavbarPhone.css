@@ -19,7 +19,8 @@
     width: 75%;
     height: 100vh;
     background: linear-gradient(180deg, #0f1724, #111827);
-    z-index: 1400;
+    /* IMPORTANTE: más bajo que nav, pero alto sobre el body */
+    z-index: 1050;
     padding: 2.5rem 1.25rem;
     box-shadow: -10px 0 30px rgba(0, 0, 0, 0.6);
 }

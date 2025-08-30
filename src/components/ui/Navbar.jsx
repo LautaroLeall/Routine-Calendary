@@ -1,7 +1,10 @@
 // src/components/ui/NavBar.js
-// NavBar responsivo con confirmación de logout (SweetAlert2), animaciones (Framer Motion)
-// Mejoras: accesibilidad (aria), cerrar menú en navegación/escape, evitar scroll body,
-// usar NavLink para active state y cerrar mobile panel al navegar.
+// NavBar responsivo con:
+// - Confirmación de logout (SweetAlert2)
+// - Animaciones (Framer Motion)
+// - Accesibilidad (aria, roles, tabIndex, cerrar menú con Escape)
+// - Evita scroll body cuando menú móvil está abierto
+// - Mejora UX: botón de logout deshabilitado mientras se procesa
 
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { FaBars, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
@@ -16,69 +19,73 @@ import "../../styles/NavbarPhone.css";
 export default function NavBar() {
     const { user, logout } = useAuth();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [loggingOut, setLoggingOut] = useState(false); // para deshabilitar botón durante logout
     const location = useLocation();
     const navigate = useNavigate();
 
     const toggleMenu = () => setMenuOpen(s => !s);
     const closeMenu = () => setMenuOpen(false);
 
-    // Cerrar sesión con confirmación
+    // Cerrar sesión con confirmación y manejo seguro
     const handleLogout = async () => {
-        const result = await Swal.fire({
-            title: "¿Cerrar sesión?",
-            text: "Vas a salir de tu cuenta. ¿Querés continuar?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Sí, salir",
-            cancelButtonText: "Cancelar",
-            reverseButtons: true,
-            focusCancel: true,
-            customClass: { popup: "swal2-theme-dark" },
-        });
-
-        if (result.isConfirmed) {
-            logout();
-            navigate("/login");
-            Swal.fire({
-                title: "Sesión cerrada",
-                icon: "success",
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 1400,
+        setLoggingOut(true);
+        try {
+            const result = await Swal.fire({
+                title: "¿Cerrar sesión?",
+                text: "Vas a salir de tu cuenta. ¿Querés continuar?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sí, salir",
+                cancelButtonText: "Cancelar",
+                reverseButtons: true,
+                focusCancel: true,
+                customClass: { popup: "swal2-theme-dark" },
             });
+
+            if (result.isConfirmed) {
+                logout(); // logout sync desde contexto
+                navigate("/login");
+                Swal.fire({
+                    title: "Sesión cerrada",
+                    icon: "success",
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 1400,
+                });
+            }
+        } catch (err) {
+            console.error("Error al cerrar sesión:", err);
+        } finally {
+            setLoggingOut(false);
         }
     };
 
-    const initials = user ? (user.username || user.email || "U").slice(0, 2).toUpperCase() : "U";
+    // Iniciales para avatar (máx 2 caracteres)
+    const initials = user
+        ? (user.username || user.email || "U").substring(0, 2).toUpperCase()
+        : "U";
 
-    // Accessibility & UX: cerrar menú al cambiar de ruta o al presionar Escape,
-    // y bloquear scroll del body cuando el menú móvil está abierto.
-    useEffect(() => {
-        // Close menu when route changes
-        closeMenu();
-    }, [location.pathname]);
+    // Cerrar menú al cambiar de ruta
+    useEffect(() => closeMenu(), [location.pathname]);
 
+    // Cerrar menú al presionar Escape
     useEffect(() => {
-        const onKey = (e) => {
-            if (e.key === "Escape") closeMenu();
-        };
+        const onKey = (e) => { if (e.key === "Escape") closeMenu(); };
         window.addEventListener("keydown", onKey);
         return () => window.removeEventListener("keydown", onKey);
     }, []);
 
+    // Bloquear scroll del body cuando menú móvil abierto
     useEffect(() => {
-        // prevent body scroll when menu is open on mobile
-        if (menuOpen) {
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "";
-        }
+        if (menuOpen) document.body.style.overflow = "hidden";
+        else document.body.style.overflow = "";
         return () => { document.body.style.overflow = ""; };
     }, [menuOpen]);
 
     return (
         <nav key={location.pathname} className="app-nav" role="navigation" aria-label="Main Navigation">
+            {/* Logo */}
             <div className="nav-left">
                 <motion.div
                     className="logo-wrap"
@@ -86,7 +93,12 @@ export default function NavBar() {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ type: "spring", stiffness: 120, damping: 14 }}
                 >
-                    <NavLink to="/dashboard" className="logo-link" onClick={closeMenu} aria-label="Ir al Dashboard">
+                    <NavLink
+                        to="/dashboard"
+                        className="logo-link"
+                        onClick={closeMenu}
+                        aria-label="Ir al Dashboard"
+                    >
                         <span className="logo-main">Routine Calendary</span>
                         <span className="logo-accent">App</span>
                     </NavLink>
@@ -99,6 +111,7 @@ export default function NavBar() {
                 </motion.div>
             </div>
 
+            {/* Hamburger mobile */}
             <button
                 type="button"
                 className="nav-hamburger"
@@ -110,6 +123,7 @@ export default function NavBar() {
                 <FaBars />
             </button>
 
+            {/* Menú principal */}
             <ul className="nav-menu" role="menubar">
                 <li role="none">
                     <NavLink to="/dashboard" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} role="menuitem">DASHBOARD</NavLink>
@@ -122,6 +136,7 @@ export default function NavBar() {
                 </li>
             </ul>
 
+            {/* Panel de usuario */}
             <div className="nav-user-panel" aria-hidden={menuOpen}>
                 {user ? (
                     <>
@@ -131,12 +146,15 @@ export default function NavBar() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.45 }}
                         >
-                            <NavLink to="/profile" className="text-decoration-none d-flex align-items-center gap-2" onClick={closeMenu}>
+                            <NavLink
+                                to="/profile"
+                                className="text-decoration-none d-flex align-items-center gap-2"
+                                onClick={closeMenu}
+                            >
                                 <div className="avatar" title={user.username || user.email}>
                                     <FaUserCircle className="avatar-icon" />
                                     <span className="avatar-initials" aria-hidden="true">{initials}</span>
                                 </div>
-
                                 <div className="greeting-text">
                                     <span className="small">Hola</span>
                                     <strong className="username">{user.username || user.email}</strong>
@@ -148,6 +166,7 @@ export default function NavBar() {
                             type="button"
                             className="btn-logout"
                             onClick={handleLogout}
+                            disabled={loggingOut} // deshabilitar mientras procesa logout
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.98 }}
                             title="Cerrar sesión"
@@ -161,6 +180,7 @@ export default function NavBar() {
                 )}
             </div>
 
+            {/* Menú móvil */}
             <AnimatePresence>
                 {menuOpen && (
                     <motion.aside
@@ -171,21 +191,29 @@ export default function NavBar() {
                         exit={{ x: "100%" }}
                         transition={{ type: "spring", stiffness: 120, damping: 20 }}
                         aria-hidden={!menuOpen}
+                        role="menu"
                     >
                         <ul className="mobile-menu d-flex flex-column align-items-center justify-content-center">
-                            <li><NavLink to="/dashboard" className="nav-link" onClick={closeMenu}>DASHBOARD</NavLink></li>
-                            <li><NavLink to="/calendar" className="nav-link" onClick={closeMenu}>CALENDARY</NavLink></li>
-                            <li><NavLink to="/routines" className="nav-link" onClick={closeMenu}>ROUTINES</NavLink></li>
+                            <li><NavLink to="/dashboard" className="nav-link" onClick={closeMenu} role="menuitem">DASHBOARD</NavLink></li>
+                            <li><NavLink to="/calendar" className="nav-link" onClick={closeMenu} role="menuitem">CALENDARY</NavLink></li>
+                            <li><NavLink to="/routines" className="nav-link" onClick={closeMenu} role="menuitem">ROUTINES</NavLink></li>
                             <li className="mobile-separator" />
                             {user ? (
                                 <>
                                     <li className="mobile-user"><strong>{user.username || user.email}</strong></li>
                                     <li>
-                                        <button className="mobile-logout" onClick={() => { closeMenu(); handleLogout(); }} aria-label="Cerrar sesión">Salir</button>
+                                        <button
+                                            className="mobile-logout"
+                                            onClick={() => { closeMenu(); handleLogout(); }}
+                                            aria-label="Cerrar sesión"
+                                            disabled={loggingOut}
+                                        >
+                                            Salir
+                                        </button>
                                     </li>
                                 </>
                             ) : (
-                                <li><NavLink to="/login" onClick={closeMenu}>Iniciar sesión</NavLink></li>
+                                <li><NavLink to="/login" onClick={closeMenu} role="menuitem">Iniciar sesión</NavLink></li>
                             )}
                         </ul>
                     </motion.aside>

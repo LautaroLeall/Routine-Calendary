@@ -10,7 +10,9 @@
     border-bottom: 2px solid #45C4B0;
     position: sticky;
     top: 0;
-    z-index: 1200;
+    /* IMPORTANTE: z-index más alto que overlays globales */
+    position: relative;
+    z-index: 1100;
     backdrop-filter: blur(6px);
 }
 
