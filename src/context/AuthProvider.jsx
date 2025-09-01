@@ -91,6 +91,7 @@ export default function AuthProvider({ children }) {
                 purpose: Array.isArray(purpose) ? purpose : [purpose],
                 tipoCalendario: null,
                 rutinas: [],
+                avatar: null,
             };
 
             setUsers((prev) => [...prev, nuevo]);
