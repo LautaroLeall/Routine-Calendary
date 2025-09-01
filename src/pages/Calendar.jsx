@@ -6,7 +6,7 @@ import WeeklyView from "../components/calendar/WeeklyView";
 import MonthlyView from "../components/calendar/MonthlyView";
 import CalendarList from "../components/calendar/CalendarList";
 import useCalendars from "../hooks/useCalendars";
-// import useInitDemo from "../hooks/useInitDemo";
+import useInitDemo from "../hooks/useInitDemo";
 
 import "../styles/Calendar.css";
 import "../styles/CalendarAlert.css";
@@ -29,7 +29,7 @@ export default function CalendarPage() {
     const activeCalendar = calendars[activeCalendarId];
 
     // Hook para asegurar que siempre haya un calendario activo
-    // useInitDemo();
+    useInitDemo();
 
     // Función para cambiar de pestaña
     const goToTab = (t) => setTab(t);
