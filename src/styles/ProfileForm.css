@@ -1,0 +1,87 @@
+/* src/styles/ProfileForm.css */
+/* Form card specific styles (match Register look) */
+
+.card-profile-title {
+    color: #13678A;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.6rem;
+}
+
+.info-row label {
+    font-weight: 500;
+    color: #13678A;
+}
+
+.info-value {
+    color: #5394ae;
+    font-weight: 600;
+}
+
+.edit-form .form-control {
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    border: 1px solid #d0d7de;
+    font-size: 0.95rem;
+    transition: all 0.22s ease;
+}
+
+.edit-form .form-control:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.08);
+    border-color: #007bff;
+}
+
+.actions-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+}
+
+.btn-change-profile {
+    padding: 0.45rem 0.85rem;
+    background: linear-gradient(90deg, #02fe9d95, #00a86b);
+    color: #006739;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.5s ease;
+}
+
+.btn-change-profile:hover {
+    background: linear-gradient(90deg, #00a86b, #02fe9d95);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+}
+
+.btn-revert-profile {
+    padding: 0.45rem 0.85rem;
+    background: linear-gradient(90deg, #ada200, #d0ff0095);
+    color: #5c5600;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.5s ease;
+}
+
+.btn-revert-profile:hover {
+    background: linear-gradient(90deg, #d0ff0095, #ada200);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+}
+
+.alert {
+    margin-top: 0.6rem;
+    padding: 0.6rem;
+    border-radius: 6px;
+}
+
+.alert-danger {
+    background: #f8d7da;
+    color: #842029;
+}
+
+.alert-success {
+    background: #d1e7dd;
+    color: #0f5132;
+}
