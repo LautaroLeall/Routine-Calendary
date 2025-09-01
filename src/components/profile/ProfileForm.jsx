@@ -1,4 +1,4 @@
-// src/components/ui/ProfileForm.jsx
+// src/components/profile/ProfileForm.jsx
 // - Form de edición de email / username / purpose (solo UI).
 // - Botones Guardar / Revertir.
 // - No maneja lógica de persistencia: recibe callbacks desde la página padre.
