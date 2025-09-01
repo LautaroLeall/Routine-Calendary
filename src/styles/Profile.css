@@ -1,0 +1,70 @@
+/* src/styles/Profile.css */
+/* Wrapper general y grid layout similar look-and-feel a Register.css */
+
+.profile-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    color: #13678A;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.profile-subtitle {
+    color: #5394ae;
+    margin-top: 0.25rem;
+}
+
+.card-profile {
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1px solid hsla(200, 100%, 25%, 0.5);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(360deg, hsla(200, 100%, 25%, 0.2), hsla(200, 100%, 70%, 0.1));
+}
+
+/* Grid: left (form) + right (avatar) */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 5rem;
+    align-items: start;
+    margin-bottom: 2rem;
+}
+
+/* make it responsive */
+@media (max-width: 920px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.btn-logout,
+.btn-delete {
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-logout,
+.btn-delete {
+    padding: 0.45rem 0.85rem;
+    background: linear-gradient(90deg, #ff6b6b, #ff3b3b);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    transition: all 0.5s ease;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.password-section {
+    margin-top: 0.8rem;
+}
