@@ -1,10 +1,10 @@
-// src/components/ui/PasswordCard.jsx
+// src/components/profile/PasswordCard.jsx
 // - Card para cambiar contraseña: actual / nueva / confirmar nueva.
 // - Incluye toggles para mostrar/ocultar contraseñas.
 
 import React, { useState } from "react";
 import { FaEyeSlash } from "react-icons/fa";
-import { IoEyeSharp } from "react-icons/io5"; // 👈 el ojo abierto
+import { IoEyeSharp } from "react-icons/io5";
 
 export default function PasswordCard({ pw, onPwChange, onConfirm, changing }) {
     const [showCurrent, setShowCurrent] = useState(false);
